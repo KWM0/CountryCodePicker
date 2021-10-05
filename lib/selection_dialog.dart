@@ -57,6 +57,7 @@ class SelectionDialog extends StatefulWidget {
 class _SelectionDialogState extends State<SelectionDialog> {
   /// this is useful for filtering purpose
   late List<CountryCode> filteredElements;
+  var _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -83,19 +84,37 @@ class _SelectionDialogState extends State<SelectionDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              IconButton(
-                padding: const EdgeInsets.all(0),
-                iconSize: 20,
-                icon: widget.closeIcon!,
-                onPressed: () => Navigator.pop(context),
-              ),
+              if (widget.hideSearch)
+                IconButton(
+                  padding: const EdgeInsets.all(0),
+                  iconSize: 20,
+                  icon: widget.closeIcon!,
+                  onPressed: () => Navigator.pop(context),
+                ),
               if (!widget.hideSearch)
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: TextField(
-                    style: widget.searchStyle,
-                    decoration: widget.searchDecoration,
-                    onChanged: _filterElements,
+                  padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _controller,
+                          style: widget.searchStyle,
+                          decoration: widget.searchDecoration.copyWith(
+                            suffixIcon: IconButton(
+                              onPressed: _controller.clear,
+                              icon: Icon(Icons.clear),
+                            ),
+                          ),
+                          onChanged: _filterElements,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('CANCEL'),
+                      )
+                    ],
                   ),
                 ),
               Expanded(
