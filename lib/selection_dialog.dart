@@ -102,7 +102,7 @@ class _SelectionDialogState extends State<SelectionDialog> {
                           style: widget.searchStyle,
                           decoration: widget.searchDecoration.copyWith(
                             suffixIcon: IconButton(
-                              onPressed: _controller.clear,
+                              onPressed: _clearFilterElements,
                               icon: Icon(Icons.clear),
                             ),
                           ),
@@ -216,6 +216,13 @@ class _SelectionDialogState extends State<SelectionDialog> {
               e.dialCode!.contains(s) ||
               e.name!.toUpperCase().contains(s))
           .toList();
+    });
+  }
+
+  void _clearFilterElements() {
+    _controller.clear();
+    setState(() {
+      filteredElements = widget.elements;
     });
   }
 
