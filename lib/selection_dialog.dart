@@ -17,6 +17,7 @@ class SelectionDialog extends StatefulWidget {
   final Size? size;
   final bool hideSearch;
   final Icon? closeIcon;
+  final Widget? closeWidget;
 
   /// Background color of SelectionDialog
   final Color? backgroundColor;
@@ -45,6 +46,7 @@ class SelectionDialog extends StatefulWidget {
     this.barrierColor,
     this.hideSearch = false,
     this.closeIcon,
+    this.closeWidget,
   })  : this.searchDecoration = searchDecoration.prefixIcon == null
             ? searchDecoration.copyWith(prefixIcon: Icon(Icons.search))
             : searchDecoration,
@@ -112,7 +114,7 @@ class _SelectionDialogState extends State<SelectionDialog> {
                       SizedBox(width: 8),
                       TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: Text('CANCEL'),
+                        child: widget.closeWidget ?? Text('CANCEL'),
                       )
                     ],
                   ),
