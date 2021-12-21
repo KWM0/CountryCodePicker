@@ -72,7 +72,7 @@ class _SelectionDialogState extends State<SelectionDialog> {
           decoration: widget.boxDecoration ??
               BoxDecoration(
                 color: widget.backgroundColor ?? Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 boxShadow: [
                   BoxShadow(
                     color: widget.barrierColor ?? Colors.grey.withOpacity(1),
@@ -83,8 +83,6 @@ class _SelectionDialogState extends State<SelectionDialog> {
                 ],
               ),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               if (widget.hideSearch)
                 IconButton(
@@ -95,7 +93,7 @@ class _SelectionDialogState extends State<SelectionDialog> {
                 ),
               if (!widget.hideSearch)
                 Padding(
-                  padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
+                  padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
                       Expanded(
@@ -113,6 +111,10 @@ class _SelectionDialogState extends State<SelectionDialog> {
                       ),
                       SizedBox(width: 8),
                       TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          alignment: Alignment.centerRight,
+                        ),
                         onPressed: () => Navigator.pop(context),
                         child: widget.closeWidget ?? Text('CANCEL'),
                       )
@@ -120,36 +122,48 @@ class _SelectionDialogState extends State<SelectionDialog> {
                   ),
                 ),
               Expanded(
-                child: ListView(
-                  children: [
-                    widget.favoriteElements.isEmpty
-                        ? const DecoratedBox(decoration: BoxDecoration())
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ...widget.favoriteElements.map(
-                                (f) => SimpleDialogOption(
-                                  child: _buildOption(f),
-                                  onPressed: () {
-                                    _selectItem(f);
-                                  },
+                child: MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true,
+                  child: ListView(
+                    children: [
+                      widget.favoriteElements.isEmpty
+                          ? const DecoratedBox(decoration: BoxDecoration())
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ...widget.favoriteElements.map(
+                                  (f) => SimpleDialogOption(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 28,
+                                      vertical: 16,
+                                    ),
+                                    child: _buildOption(f),
+                                    onPressed: () {
+                                      _selectItem(f);
+                                    },
+                                  ),
                                 ),
-                              ),
-                              const Divider(),
-                            ],
+                                const Divider(),
+                              ],
+                            ),
+                      if (filteredElements.isEmpty)
+                        _buildEmptySearchWidget(context)
+                      else
+                        ...filteredElements.map(
+                          (e) => SimpleDialogOption(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 28,
+                              vertical: 16,
+                            ),
+                            child: _buildOption(e),
+                            onPressed: () {
+                              _selectItem(e);
+                            },
                           ),
-                    if (filteredElements.isEmpty)
-                      _buildEmptySearchWidget(context)
-                    else
-                      ...filteredElements.map(
-                        (e) => SimpleDialogOption(
-                          child: _buildOption(e),
-                          onPressed: () {
-                            _selectItem(e);
-                          },
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
